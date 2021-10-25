@@ -7,12 +7,14 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
 
 import com.abhiroop.kubetime.cluster.restclient.http.pojo.ClusterClientBaseBuilder;
 import com.abhiroop.kubetime.cluster.restclient.http.pojo.OpenshiftClient;
+import com.abhiroop.kubetime.cluster.restclient.http.pojo.clusterresource.ClusterCompute;
 import com.abhiroop.kubetime.cluster.restclient.http.pojo.clusterresource.ClusterMetadata;
 import com.abhiroop.kubetime.cluster.restclient.http.pojo.clusterresource.NamespaceResourceObject;
 import com.abhiroop.kubetime.cluster.restclient.http.pojo.clusterresource.PodResourceObject;
@@ -31,8 +33,24 @@ public class PlatformDataController {
 	@Autowired
 	private PlatformMetadataServiceImpl platformMetaDataSvc;
 
+	@GetMapping("/nodes/worker/compute/")
+	public ClusterCompute getWorkerNodesCompute(ClusterMetadata cmd) {
+		ClusterCompute c = null;
+		try {
+			ClusterClientBaseBuilder oc = new OpenshiftClient();
+
+			oc.withBaseUrl(cmd.getEndPointUrl());
+			oc.usingToken(cmd.getToken());
+			c = platformMetaDataSvc.getClusterWorkerCompute(oc);
+
+		} catch (Exception e) {
+			System.out.println("Error in getting compute resources of worker nodes" + e);
+		}
+		return c;
+	}
+
 	@GetMapping("/clusterServiceStatus")
-	public String clusterServiceStatus(String endPoint , String token) {
+	public String clusterServiceStatus(String endPoint, String token) {
 		ClusterClientBaseBuilder oc = new OpenshiftClient();
 		String clusterStatus = SystemConstants.StatusInActive;
 		oc.withBaseUrl(endPoint);

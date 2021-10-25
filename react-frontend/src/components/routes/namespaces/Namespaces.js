@@ -23,27 +23,48 @@ const Namespaces = (props) => {
 	const cluster = props.cluster;
 	const costData = props.costData;
 	const [resources, setResources] = useState([]);
+	const [workerCompute, setWorkerCompute] = useState([]);
 	const [pods, setPods] = useState([]);
 	const resourcesRef = useRef();
 	resourcesRef.current = resources;
-	useEffect(async () => { retrieveResources(); }, []);
+	useEffect(async () => { getWorkerCompute(); }, []);
 
 
+	const getWorkerCompute = () => {
+		DataService.getWorkerCompute(cluster.uuid).then(
+			(response) => {
+				setWorkerCompute(response.data);
+
+				var workerNodeCompute = response.data;
+				var _u_email = JSON.parse(localStorage.getItem('_u_email'));
+				DataService.getResourcePerNamespaces({
+					clusterId: cluster.uuid,
+					userEmail: _u_email
+				})
+					.then((response) => {
+						var dataFromService = response.data;
+						dataFromService.map((r, index) => {
+							if (!r.requestCpu) {
+								r.requestCpu = workerNodeCompute.cpuAllocatable/1000 ;
+							}
+							if (!r.requestMemory && workerNodeCompute.memoryAllocatable ) {
+								r.requestMemory = (workerNodeCompute.memoryAllocatable/1024).toFixed(2) +'Gi';
+							}
+						});
+						setResources(dataFromService);
+					})
+					.catch((e) => {
+						console.log(e);
+					});
 
 
-	const retrieveResources = () => {
-		var _u_email = JSON.parse(localStorage.getItem('_u_email'));
-		DataService.getResourcePerNamespaces({
-			clusterId: cluster.uuid,
-			userEmail: _u_email
-		})
-			.then((response) => {
-				setResources(response.data);
-			})
-			.catch((e) => {
-				console.log(e);
-			});
-	};
+			}).catch(error => {
+				console.log(error);
+			}
+			);
+	}
+
+
 	const getPodResources = (rowIndex) => {
 		const namespace = resourcesRef.current[rowIndex].namespaceName;
 		DataService.getPodResourcePerNamespaces(
@@ -148,7 +169,7 @@ const Namespaces = (props) => {
 
 			},
 			{
-				Header: "cpu-quota",
+				Header: "cpu-quota (in vCPU)",
 				accessor: "requestCpu",
 				disableFilters: true,
 			},
@@ -158,7 +179,7 @@ const Namespaces = (props) => {
 				disableFilters: true,
 			},
 			{
-				Header: "memory-quota",
+				Header: "memory-quota (in Gi)",
 				accessor: "requestMemory",
 				disableFilters: true,
 			},
@@ -229,8 +250,8 @@ const Namespaces = (props) => {
 
 			<div className="col-md-12 list table-responsive">
 				<table className="table  table-striped table-sm table-bordered border-primary align-middle" {...getTableProps()}>
-				
-				{page.length > 0 ?<caption>Accessbile Namespaces and resources in use</caption> : <caption>No data found !!!</caption> }
+
+					{page.length > 0 ? <caption>Accessbile Namespaces and resources in use</caption> : <caption>No data found !!!</caption>}
 					<thead className="">
 						<th
 							colSpan={visibleColumns.length}
@@ -319,21 +340,21 @@ const Namespaces = (props) => {
 					</div>
 				</Modal>
 
-		{pageOptions.length > 0 ? 
-				<div className="pagination">
-					<button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-						{'<<'}
-					</button>{' '}
-					<button onClick={() => previousPage()} disabled={!canPreviousPage}>
-						{'<'}
-					</button>{' '}
-					<button onClick={() => nextPage()} disabled={!canNextPage}>
-						{'>'}
-					</button>{' '}
-					<button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-						{'>>'}
-					</button>{' '}
-					
+				{pageOptions.length > 0 ?
+					<div className="pagination">
+						<button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+							{'<<'}
+						</button>{' '}
+						<button onClick={() => previousPage()} disabled={!canPreviousPage}>
+							{'<'}
+						</button>{' '}
+						<button onClick={() => nextPage()} disabled={!canNextPage}>
+							{'>'}
+						</button>{' '}
+						<button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+							{'>>'}
+						</button>{' '}
+
 						<span>
 							Page{' '}
 							<strong>
@@ -353,8 +374,8 @@ const Namespaces = (props) => {
 								</option>
 							))}
 						</select>
-				</div>
-						: null}
+					</div>
+					: null}
 
 			</div>
 

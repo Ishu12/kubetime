@@ -23,27 +23,29 @@ class ResourceUsagePrintClass extends React.Component {
 
 	calcAmount = (data, costData) => {
 		var c = 0.0;
+		var internalStorageVolumeProcessingVar;
 		data.forEach(d => {
 			d.cost = 0.0;
 			if (d.storageVolume) {
 				if (d.storageVolume.endsWith("Gi")) {
-					d.storageVolume = d.storageVolume.substring(0, d.storageVolume.length - 2);
+					internalStorageVolumeProcessingVar = d.storageVolume.substring(0, d.storageVolume.length - 2);
 					if (costData.storageunit === "Gi") {
-						d.cost = d.cost + (d.storageVolume * costData.storagecost);
+						d.cost = d.cost + (internalStorageVolumeProcessingVar * costData.storagecost);
 					} else if (costData.storageunit === "mi" || costData.storageunit === "Mi") {
-						d.cost = d.cost + (d.storageVolume / 1024) * costData.storagecost;
+						d.cost = d.cost + (internalStorageVolumeProcessingVar / 1024) * costData.storagecost;
 					}
 
 				} else if (d.storageVolume.endsWith("mi") || d.storageVolume.endsWith("Mi")) {
-					d.storageVolume = d.storageVolume.substring(0, d.storageVolume.length - 2);
+					internalStorageVolumeProcessingVar = d.storageVolume.substring(0, d.storageVolume.length - 2);
 					if (costData.storageunit === "Gi") {
-						d.cost = d.cost + (d.storageVolume / 1024) * costData.storagecost;
+						d.cost = d.cost + (internalStorageVolumeProcessingVar / 1024) * costData.storagecost;
 
 					} else if (costData.storageunit === "mi" || costData.storageunit === "Mi") {
 						d.cost = d.cost + d.storageVolume * costData.storagecost;
 					}
 				} else {
 					d.cost = d.cost + (d.storageVolume * costData.storagecost);
+					d.storageVolume =d.storageVolume+'Gi';
 				}
 
 			} else {
@@ -200,7 +202,7 @@ class ResourceUsagePrintClass extends React.Component {
 											<th scope="col">AccessedLabel</th>
 											<th scope="col">Storage</th>
 											<th scope="col">vCpu</th>
-											<th scope="col">Memory</th>
+											<th scope="col">Memory(in Gi)</th>
 											<th scope="col">Cost</th>
 										</tr>
 									</thead>
@@ -217,7 +219,7 @@ class ResourceUsagePrintClass extends React.Component {
 													<td scope="row">{tuple.storageVolume}</td>
 													<td scope="row">{tuple.requestCpu}</td>
 													<td scope="row">{tuple.requestMemory}</td>
-													<td scope="row">{tuple.cost}</td>
+													<td scope="row">{tuple.cost.toFixed(2)}</td>
 												</tr>
 											))}
 										</> : null}
@@ -227,7 +229,7 @@ class ResourceUsagePrintClass extends React.Component {
 
 								<div class="row mt-3">
 									<div class="col-12 col-sm-7 text-grey-d2 text-95 mt-2 mt-lg-0">
-										Extra note such as company or payment information...
+										Extra note such as company or payment information...(if any..)
                         </div>
 
 									<div class="col-12 col-sm-5 text-grey text-90 order-first order-sm-last">
@@ -236,7 +238,7 @@ class ResourceUsagePrintClass extends React.Component {
 												SubTotal
                                 </div>
 											<div class="col-5">
-												<span class="text-120 text-secondary-d1">${totalCost}</span>
+												<span class="text-120 text-secondary-d1">${totalCost.toFixed(2)}</span>
 											</div>
 										</div>
 
@@ -245,7 +247,7 @@ class ResourceUsagePrintClass extends React.Component {
 												Tax (10%)
                                 </div>
 											<div class="col-5">
-												<span class="text-110 text-secondary-d1">${totalCost / 10}</span>
+												<span class="text-110 text-secondary-d1">${(totalCost / 10).toFixed(2)}</span>
 											</div>
 										</div>
 
@@ -254,7 +256,7 @@ class ResourceUsagePrintClass extends React.Component {
 												Total Amount
                                 </div>
 											<div class="col-5">
-												<span class="text-150 text-success-d3 opacity-2">${totalCost + (totalCost / 10)}</span>
+												<span class="text-150 text-success-d3 opacity-2">${(totalCost + (totalCost / 10)).toFixed(2)}</span>
 											</div>
 										</div>
 									</div>

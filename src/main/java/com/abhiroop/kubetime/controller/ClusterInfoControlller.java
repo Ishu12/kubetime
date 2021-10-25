@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.abhiroop.kubetime.cluster.restclient.http.PlatformDataController;
+import com.abhiroop.kubetime.cluster.restclient.http.pojo.clusterresource.ClusterCompute;
 import com.abhiroop.kubetime.cluster.restclient.http.pojo.clusterresource.ClusterMetadata;
 import com.abhiroop.kubetime.cluster.restclient.http.pojo.clusterresource.NamespaceResourceObject;
 import com.abhiroop.kubetime.cluster.restclient.http.pojo.clusterresource.PodResourceObject;
@@ -77,6 +78,20 @@ public class ClusterInfoControlller {
 	}
 
 	////////////////////////// platform api connection data //////////////
+
+	@GetMapping("/nodes/worker/compute/{id}")
+	public ClusterCompute getWorkerNodeCompute(@PathVariable String id) {
+		ClusterCompute cc = null;
+		Cluster c = getById(id);
+		if (c != null) {
+			ClusterMetadata cmd = new ClusterMetadata();
+			cmd.setToken(c.getToken());
+			cmd.setEndPointUrl(c.getEndpoint());
+			cc = pdc.getWorkerNodesCompute(cmd);
+		}
+		return cc;
+	}
+
 	@PostMapping("/clusterSummary")
 	public ClusterMetadata getClusterSummarty(@RequestBody ClusterMetadata cmd) {
 		Cluster c = getById(cmd.getClusterId());
@@ -97,7 +112,7 @@ public class ClusterInfoControlller {
 		// session validate:TODO
 
 		// user status validate//
-		
+
 		User user = userCtrl.getByEmail(rqro.getUserEmail());
 
 		if (c != null && user != null && StringUtils.equals("A", user.getStatus())) {
@@ -108,29 +123,27 @@ public class ClusterInfoControlller {
 			ClusterMetadata cmd = new ClusterMetadata();
 			cmd.setEndPointUrl(c.getEndpoint());
 			cmd.setToken(c.getToken());
-			cmd.setClusterId(c.getEndpoint());
+			cmd.setClusterId("" + c.getUuid());
 
 			nroList = pdc.getNameSpaceResources(cmd, labelList);
-			System.out.println("Total " + nroList.size() + " nameSpace Resources accessed to the user of id : " + user.getUuid());
+			System.out.println(
+					"Total " + nroList.size() + " nameSpace Resources accessed to the user of id : " + user.getUuid());
 		}
 		return nroList;
 	}
 
-	
 	@PostMapping("/platform/namespaces/pods")
 	public List<PodResourceObject> getNameSpacePodMetrics(@RequestBody ResourceRequestObject rqro) {
-		
-		
+
 		Cluster c = getById(rqro.getClusterId());
 		ClusterMetadata cmd = new ClusterMetadata();
 		cmd.setEndPointUrl(c.getEndpoint());
 		cmd.setToken(c.getToken());
 		cmd.setClusterId(c.getEndpoint());
-		
+
 		return pdc.getPodResourcePerNameSpace(cmd, rqro.getNamespace());
 	}
-	
-	
+
 	/////////////////////// platform api connection data //////////////
 
 	/////////////////////// cost details//////////////
@@ -143,7 +156,7 @@ public class ClusterInfoControlller {
 			cid = Long.parseLong(id);
 			ic = costService.getCostDeatilPerCluster(cid);
 			ic.setUuid(0);
-			
+
 			System.out.println("cost per cluster data recieved");
 		} catch (RuntimeException pe) {
 			System.out.println(pe);

@@ -37,6 +37,10 @@ class DataService {
 	getClusterMetadata(data) {
 		return axios.post(BASE_URL + '/api/clusters/clusterSummary', data, { headers: authHeader() });
 	}
+	
+	getWorkerCompute(data){
+		return axios.get(BASE_URL + '/api/clusters/nodes/worker/compute/'+data , { headers: authHeader() });
+	}
 
 	loginUser(data) {
 		return axios.post(BASE_URL + '/api/authenticate', data);
