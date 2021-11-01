@@ -40,7 +40,7 @@ export class Confirm extends Component {
 
 
 		const {
-			values: { name, endpoint, token, environment, cpucost, memorycost, storagecost }
+			values: { name,clusterType, endpoint, token, environment, cpucost, memorycost, storagecost }
 		} = this.props;
 
 		return (<>
@@ -58,6 +58,12 @@ export class Confirm extends Component {
 								<div class="list-group-item-fixed">
 									<strong className="list-group-left">Cluster Name : </strong>
 									<span className="list-group-right">{name}</span>
+								</div>
+							</li>
+							<li class="list-group-item">
+								<div class="list-group-item-fixed">
+									<strong className="list-group-left">Cluster Type : </strong>
+									<span className="list-group-right">{clusterType}</span>
 								</div>
 							</li>
 							<li class="list-group-item">

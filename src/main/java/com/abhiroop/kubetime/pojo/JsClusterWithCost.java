@@ -22,7 +22,7 @@ public class JsClusterWithCost implements Serializable{
 
 	private String name;
 	private String endpoint;
-
+	private String clusterType;
 	private String status;
 	private String token;
 	private String environment;

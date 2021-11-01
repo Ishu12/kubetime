@@ -2,17 +2,17 @@ import React, { Component } from 'react';
 
 export class ClusterInfoDetails extends Component {
 
-	
+
 	continue = e => {
 		e.preventDefault();
-			this.props.nextStep();
+		this.props.nextStep();
 
 	};
 
 
 	render() {
 		const { values, handleChange } = this.props;
-		const isEnabled = values.name.length > 0 && values.endpoint.length > 0 && values.environment.length >0 && values.token.length>0;
+		const isEnabled = values.name.length > 0 && values.clusterType.length > 0  && values.endpoint.length > 0 && values.environment.length > 0 && values.token.length > 0;
 		return (<>
 
 			<div className="outer">
@@ -20,13 +20,21 @@ export class ClusterInfoDetails extends Component {
 
 					<h4>Add cluster information to system</h4>
 
-					
+
 
 					<div className="form-group required">
 						<label className="control-label">CLuster Name</label>
 						<input type="text" name="name" className="form-control " onChange={handleChange('name')} defaultValue={values.name} placeholder="Cluster unique name" />
 					</div>
+					<div class="form-group required">
+					<label className="control-label">CLuster Type</label>
+						<select className="form-control" aria-label="Select the cluster type" defaultValue={values.clusterType} onChange={handleChange('clusterType')} name="clusterType">
+							<option selected value=''>Select the cluster type</option>
+							<option value='k8s'>Kubernetes Native</option>
+							<option value='OCP4'>Red Hat Openshift-v4</option>
 
+						</select>
+					</div>
 
 					<div className="form-group required">
 						<label className="control-label">Cluster End Point</label>
@@ -45,7 +53,7 @@ export class ClusterInfoDetails extends Component {
 					</div>
 
 					<br />
-					<button type="button" style={{textTransform: 'none'}} onClick={this.continue} disabled={!isEnabled} className="btn btn-dark btn-lg btn-block">Continue</button>
+					<button type="button" style={{ textTransform: 'none' }} onClick={this.continue} disabled={!isEnabled} className="btn btn-dark btn-lg btn-block">Continue</button>
 
 				</div></div>
 

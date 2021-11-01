@@ -68,13 +68,19 @@ public class PlatformDataController {
 	@GetMapping("/getPlatformSpec")
 	public ClusterMetadata getPlatformSpec(ClusterMetadata cmd) {
 
-		ClusterClientBaseBuilder oc = new OpenshiftClient();
+		ClusterClientBaseBuilder oc = PlatformHelperFunction.getClusterClientObject(cmd.getClustertype());
 
-		oc.withBaseUrl(cmd.getEndPointUrl());
-		oc.usingToken(cmd.getToken());
-		ClusterMetadata data = platformMetaDataSvc.getPlatformSpec(oc);
-		data.setClusterName(cmd.getClusterName());
-		return data;
+		if (oc != null) {
+			oc.withBaseUrl(cmd.getEndPointUrl());
+			oc.usingToken(cmd.getToken());
+			cmd = platformMetaDataSvc.getPlatformSpec(oc);
+			cmd.setClusterName(cmd.getClusterName());
+		} else {
+			String s = "No Platform Client found. Requested Platform, <<"+cmd.getClustertype()+" >> is not supported yet . Please contact Admin !!!";
+			cmd.setErrorMessage(s);
+			System.out.println(s);
+		}
+		return cmd;
 	}
 
 	public List<NamespaceResourceObject> getNameSpaceResources(ClusterMetadata cmd, List<String> s) {

@@ -76,16 +76,17 @@ public class PlatformMetadataServiceImpl implements IPlatformMetadataService {
 			cmd.setGitVersion(JsonParserHelper.getDataValue(fullJson, new String[] { "gitVersion" }));
 			cmd.setGoVersion(JsonParserHelper.getDataValue(fullJson, new String[] { "goVersion" }));
 			cmd.setPlatform(JsonParserHelper.getDataValue(fullJson, new String[] { "platform" }));
-			response = null;
-			response = restTemplate.exchange(client.getClusterSpecApiUrl(), HttpMethod.GET, entity, String.class);
-			fullJson = response.getBody();
-			jo = (JSONObject) new JSONParser().parse(fullJson);
+			if (!StringUtils.isEmpty(client.getClusterSpecApiUrl())) {
+				response = null;
+				response = restTemplate.exchange(client.getClusterSpecApiUrl(), HttpMethod.GET, entity, String.class);
+				fullJson = response.getBody();
+				jo = (JSONObject) new JSONParser().parse(fullJson);
 
-			cmd.setChannel(JsonParserHelper.getDataValue(fullJson, new String[] { "spec", "channel" }));
-			cmd.setClusterVersion(
-					JsonParserHelper.getDataValue(fullJson, new String[] { "status", "desired", "version" }));
-			cmd.setClusterId(JsonParserHelper.getDataValue(fullJson, new String[] { "spec", "clusterID" }));
-
+				cmd.setChannel(JsonParserHelper.getDataValue(fullJson, new String[] { "spec", "channel" }));
+				cmd.setClusterVersion(
+						JsonParserHelper.getDataValue(fullJson, new String[] { "status", "desired", "version" }));
+				cmd.setClusterId(JsonParserHelper.getDataValue(fullJson, new String[] { "spec", "clusterID" }));
+			}
 			System.out.println(cmd);
 
 		} catch (RestClientException | ParseException rce) {

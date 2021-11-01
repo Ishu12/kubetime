@@ -87,7 +87,7 @@ public class adminApiController {
 		c.setEnvironment(jcc.getEnvironment());
 		c.setName(jcc.getName());
 		c.setToken(jcc.getToken());
-
+		c.setClustertype(jcc.getClusterType());
 		c.setRegisteredon(new Date());
 		c.setStatus(SystemConstants.StatusActive);
 

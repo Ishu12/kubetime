@@ -3,6 +3,7 @@ package com.abhiroop.kubetime.pojo;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -32,6 +33,8 @@ public class Cluster implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long uuid;
 	private String name;
+	
+	private String clustertype;
 	private String endpoint;
 	private Date registeredon;
 	

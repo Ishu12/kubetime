@@ -97,6 +97,7 @@ public class ClusterInfoControlller {
 		Cluster c = getById(cmd.getClusterId());
 		cmd.setEndPointUrl(c.getEndpoint());
 		cmd.setToken(c.getToken());
+		cmd.setClustertype(c.getClustertype());
 		cmd = pdc.getPlatformSpec(cmd);
 		cmd.setClusterName(c.getName());
 		cmd.setEnv(c.getEnvironment());

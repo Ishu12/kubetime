@@ -17,6 +17,7 @@ public class ClusterMetadata implements Serializable{
 
 	//response variables
 	private String clusterName;
+	private String clustertype;
 	private String env;
 	private String gitVersion;
 	private String buildDate;

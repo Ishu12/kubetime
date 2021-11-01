@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `_cluster` (  `uuid` int NOT NULL AUTO_INCREMENT,  `name` varchar(45) NOT NULL,  `endpoint` varchar(100) NOT NULL,  `registeredon` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,  `status` varchar(1) NOT NULL,  `token` varchar(1000) DEFAULT NULL,`environment` varchar(20) NOT NULL,  PRIMARY KEY (`uuid`))
+CREATE TABLE IF NOT EXISTS `_cluster` (  `uuid` int NOT NULL AUTO_INCREMENT,  `name` varchar(45) NOT NULL, `clustertype` varchar(45) NOT NULL,  `endpoint` varchar(100) NOT NULL,  `registeredon` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,  `status` varchar(1) NOT NULL,  `token` varchar(3000) DEFAULT NULL,`environment` varchar(20) NOT NULL,  PRIMARY KEY (`uuid`))
 
 CREATE TABLE IF NOT EXISTS `_user` (  `uuid` int NOT NULL AUTO_INCREMENT,  `email` varchar(255) DEFAULT NULL,  `role` varchar(10) NOT NULL , `fullname` varchar(64) NOT NULL,  `pwd` varchar(64) NOT NULL,  `cluster_user_id` varchar(32) DEFAULT NULL,  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,  `status` varchar(1) NOT NULL,  PRIMARY KEY (`uuid`)) 
 

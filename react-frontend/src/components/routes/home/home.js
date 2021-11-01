@@ -91,28 +91,28 @@ class Home extends Component {
 																<tr>
 																	<th scope="col">clusterName</th>
 																	<th scope="col">Environment</th>
-																	<th scope="col">clusterVersion</th>
+																	{this.state.cluster.clusterVersion ? <th scope="col">clusterVersion</th> : null}
 																	<th scope="col">platform</th>
-																	<th scope="col">channel</th>
+																	{this.state.cluster.channel ? <th scope="col">channel</th> : null}
 
 																	<th scope="col">k8s-gitVersion</th>
 																</tr>
 															</thead>
 															<tbody>
 																<tr>
-																	<td>{this.state.cluster.clusterName}</td>
-																	<td>{this.state.cluster.env}</td>
-																	<td>{this.state.cluster.clusterVersion}</td>
-																	<td>{this.state.cluster.platform}</td>
-																	<td>{this.state.cluster.channel}</td>
+																	<th scope="col">{this.state.cluster.clusterName}</th>
+																	<th scope="col">{this.state.cluster.env}</th>
+																	{this.state.cluster.clusterVersion ? <th>{this.state.cluster.clusterVersion}</th> : null}
+																	<th scope="col">{this.state.cluster.platform}</th>
+																	{this.state.cluster.channel ? <th>{this.state.cluster.channel}</th> : null}
 
-																	<td>{this.state.cluster.gitVersion}</td>
+																	<th scope="col">{this.state.cluster.gitVersion}</th>
 																</tr>
 															</tbody>
 														</table>
 													</div>
 													<Link to={{ pathname: "/resources", state: { cluster: cluster } }} >	{this.state.cluster.errorMessage ?
-														<button type="button" style={{textTransform: 'none'}} class="btn btn-dark p-2 float-end disabled"  >Select</button> : <button type="button" class="btn btn-dark p-2 pull-right " >Select</button>}
+														<button type="button" style={{ textTransform: 'none' }} class="btn btn-dark p-2 float-end disabled"  >Select</button> : <button type="button" class="btn btn-dark p-2 pull-right " >Select</button>}
 
 													</Link>
 
@@ -123,7 +123,7 @@ class Home extends Component {
 							</MDBListGroup>
 							{this.state.isAdmin === 'AU' ?
 								<Link to="/add-cluster">
-									<button type="button" style={{textTransform: 'none'}} class="btn btn-dark text-light pull-right" >Add Cluster</button>
+									<button type="button" style={{ textTransform: 'none' }} class="btn btn-dark text-light pull-right" >Add Cluster</button>
 								</Link>
 								: null}
 						</MDBCol>

@@ -1,6 +1,6 @@
 package com.abhiroop.kubetime.cluster.restclient.http.pojo;
 
-public class KubernetesClient extends ClusterClientBaseBuilder{
+public class KubernetesNativeClient extends ClusterClientBaseBuilder{
 
 	@Override
 	public

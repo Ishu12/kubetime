@@ -10,6 +10,7 @@ export class ClusterForm extends Component {
 	state = {
 		step: 1,
 		name: '',
+		clusterType: '',
 		endpoint: '',
 		token: '',
 		environment: '',
@@ -45,8 +46,8 @@ export class ClusterForm extends Component {
 
 	render() {
 		const { step } = this.state;
-		const { name, endpoint, token, environment, cpucost, memorycost, storagecost } = this.state;
-		const values = { name, endpoint, token, environment, cpucost, memorycost, storagecost };
+		const { name,clusterType, endpoint, token, environment, cpucost, memorycost, storagecost } = this.state;
+		const values = { name,clusterType, endpoint, token, environment, cpucost, memorycost, storagecost };
 
 		switch (step) {
 			case 1:
