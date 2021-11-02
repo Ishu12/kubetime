@@ -1,5 +1,6 @@
 package com.abhiroop.kubetime.cluster.restclient.http.svc;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class PlatformDataServiceImpl implements IPlatformDataService {
 
 	@Autowired
 	private RestTemplate restTemplate;
-	
+
 	private HttpEntity<String> getSandardHttpEntity(ClusterClientBaseBuilder client) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setBearerAuth(client.getToken());
@@ -45,7 +46,7 @@ public class PlatformDataServiceImpl implements IPlatformDataService {
 			throws RestClientException, ParseException {
 		String fullJson = null;
 		List<String> nameList = null;
-		
+
 		HttpEntity<String> entity = getSandardHttpEntity(client);
 		log.info("==== RESTful API call getAccessibleNameSPaces using Spring RESTTemplate START =======");
 
@@ -60,14 +61,12 @@ public class PlatformDataServiceImpl implements IPlatformDataService {
 		return nameList;
 	}
 
-	
-
 	@Override
 	public NamespaceResourceObject getVolumePerNamespace(ClusterClientBaseBuilder client,
 			NamespaceResourceObject namespace) throws RestClientException, ParseException {
 		String fullJson = null;
 		String volumeReserved = "0Gi";
-		
+
 		HttpEntity<String> entity = getSandardHttpEntity(client);
 		log.info("==== RESTful API call getVolumePerNamespace using Spring RESTTemplate START =======");
 
@@ -112,10 +111,35 @@ public class PlatformDataServiceImpl implements IPlatformDataService {
 				namespace.setRequestMemory(JsonParserHelper.getDataValue(itemJsonString,
 						new String[] { "status", "hard", "requests.memory" }));
 				namespace.setUsedCpu(JsonParserHelper.getDataValue(itemJsonString,
-						new String[] { "status", "used", "requests.memory" }));
+						new String[] { "status", "used", "requests.cpu" }));
 				namespace.setUsedMemory(JsonParserHelper.getDataValue(itemJsonString,
 						new String[] { "status", "used", "requests.memory" }));
 				log.info("==== NamespaceResourceObject " + namespace + "  =======");
+			} else {
+				try {
+					DecimalFormat df = new DecimalFormat("#.##");
+					List<PodResourceObject> proList = getPodResourcePerNameSpace(client, namespace.getNamespaceName());
+					double cpuCore = 0.0;
+					double memByte = 0.0;
+					for (PodResourceObject p : proList) {
+
+						for (PodContainer pc : p.getContainers()) {
+							pc.setCpuCores(pc.getCpuCores().replaceAll("[^\\d.]", ""));
+							pc.setMemoryBytes(pc.getMemoryBytes().replaceAll("[^\\d.]", ""));
+							cpuCore = cpuCore + Long.parseLong(pc.getCpuCores());
+							memByte = memByte + Long.parseLong(pc.getMemoryBytes());
+						}
+					}
+					memByte = memByte / (1024*1024);
+					cpuCore = cpuCore / 1000000000;
+					namespace.setUsedCpu("" + df.format(cpuCore));
+					namespace.setUsedMemory("" + df.format(memByte));
+
+				} catch (Exception e) {
+					System.err.println(
+							"Error in getting pod metric of namespaces : " + namespace + ". Details:" + e.getMessage());
+
+				}
 			}
 		}
 		log.info("==== RESTful API Response for getResourceQuota using Spring RESTTemplate END =======");

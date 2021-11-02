@@ -100,7 +100,7 @@ public class adminApiController {
 
 			ItemCost ic = new ItemCost();
 			ic.setCpucost(jcc.getCpucost());
-			ic.setMomorycost(jcc.getMomorycost());
+			ic.setMomorycost(jcc.getMemorycost());
 			ic.setStoragecost(jcc.getStoragecost());
 			ic.setLastupdated(new Date());
 			try {

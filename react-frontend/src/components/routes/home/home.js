@@ -91,7 +91,7 @@ class Home extends Component {
 																<tr>
 																	<th scope="col">clusterName</th>
 																	<th scope="col">Environment</th>
-																	{this.state.cluster.clusterVersion ? <th scope="col">clusterVersion</th> : null}
+																	{this.state.cluster.clusterVersion ? <th scope="col">clusterVersion </th>: null}
 																	<th scope="col">platform</th>
 																	{this.state.cluster.channel ? <th scope="col">channel</th> : null}
 
@@ -101,7 +101,7 @@ class Home extends Component {
 															<tbody>
 																<tr>
 																	<th scope="col">{this.state.cluster.clusterName}</th>
-																	<th scope="col">{this.state.cluster.env}</th>
+							     										<th scope="col">{this.state.cluster.env}</th>
 																	{this.state.cluster.clusterVersion ? <th>{this.state.cluster.clusterVersion}</th> : null}
 																	<th scope="col">{this.state.cluster.platform}</th>
 																	{this.state.cluster.channel ? <th>{this.state.cluster.channel}</th> : null}
