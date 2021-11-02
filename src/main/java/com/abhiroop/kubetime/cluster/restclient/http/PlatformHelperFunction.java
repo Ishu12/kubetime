@@ -15,6 +15,7 @@ public class PlatformHelperFunction {
 		{
 			put("OCP4", new OpenshiftClient());
 			put("K8S", new KubernetesNativeClient());
+			put("k8s", new KubernetesNativeClient());
 		}
 	};
 

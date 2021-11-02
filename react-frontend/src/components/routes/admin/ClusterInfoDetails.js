@@ -30,7 +30,7 @@ export class ClusterInfoDetails extends Component {
 					<label className="control-label">CLuster Type</label>
 						<select className="form-control" aria-label="Select the cluster type" defaultValue={values.clusterType} onChange={handleChange('clusterType')} name="clusterType">
 							<option selected value=''>Select the cluster type</option>
-							<option value='k8s'>Kubernetes Native</option>
+							<option value='K8S'>Kubernetes Native</option>
 							<option value='OCP4'>Red Hat Openshift-v4</option>
 
 						</select>
