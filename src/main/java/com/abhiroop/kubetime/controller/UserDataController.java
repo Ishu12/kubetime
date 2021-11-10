@@ -73,7 +73,7 @@ public class UserDataController {
 			ud.setLastUpdated(dateFormat.format(user.getCreateTime()));
 			ud.setRole(user.getRole());
 			ud.setStatus(user.getStatus());
-			List<UserClusterAccess> ucaList = userClusterAccessService.getAllLabelAccessPerUser(user.getUuid());
+			List<UserClusterAccess> ucaList = userClusterAccessService.getActiveLabelAccessPerUser(user.getUuid());
 			for (UserClusterAccess uca : ucaList) {
 				Cluster c = clusterCtrl.getById("" + uca.getClusterUniqueId());
 				JsClusterAccess jca = new JsClusterAccess(c.getName(), uca.getAccessedLabel(), uca.getStatus());
